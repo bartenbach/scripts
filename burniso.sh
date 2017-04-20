@@ -23,8 +23,9 @@ function burniso() {
   echo "Burn success!"
 }
 
+# untested - this should work though
 function eraseiso {
-  echo "unimplemented"
+  cdrecord -v dev=/dev/sr0 blank=fast
 }
 
 if [[ -z "$1" ]]; then
