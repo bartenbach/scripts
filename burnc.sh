@@ -6,8 +6,12 @@
 version='0.0.2'
 
 main() {
-  if [[ "$1" == "-c" ]]; then
-    convert
+  if [[ "$1" == "-c" ]]; then # this needs cleaning up
+    if [[ "$2" == "mp3" ]]; then
+      convert-mp3
+    elif [[ "$2" == "flac" ]]; then
+      convert-flac
+    fi
   elif [[ "$1" == "-b" ]]; then
     if [[ "$2" == "wav" ]]; then
       burn wav
@@ -24,9 +28,15 @@ main() {
   fi
 }
 
-function convert {
+function convert-mp3 {
   for i in *.mp3 ; do
     lame --decode "$i" "$(basename "$i" .mp3)".wav
+  done
+}
+
+function convert-flac {
+  for a in *.flac; do
+    ffmpeg -i "$a" -qscale:a 0 "${a[@]/%flac/wav}"
   done
 }
 
@@ -39,7 +49,7 @@ burn() {
 
 function print_help {
   echo "burnc $version by blake bartenbach"
-  echo "  -c              convert files mp3 files in cwd to wav"
+  echo "  -c [wav|flac]   convert [type] files in cwd to wav"
   echo "  -b [wav|mp3]    burns specified files in cwd to disc"
   echo "  -h/-?           shows this help menu"
 }  
